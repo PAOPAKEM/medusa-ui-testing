@@ -3,112 +3,66 @@ Library           SeleniumLibrary
 Resource          common.robot
 
 *** Keywords ***
-Add Product To Cart From Home
-    [Arguments]    ${product_name}
-    Wait Until Element Is Visible    ${PRODUCT_WRAPPER}
-    Click Element    xpath=//p[@data-testid="product-title" and contains(text(),'${product_name}')]
-    Wait Until Element Is Visible    ${ADD_TO_CART_BUTTON}
-    Click Element    ${ADD_TO_CART_BUTTON}
-    Wait Until Element Contains    ${CART_LINK}    (1)
-
-Add Product To Cart From Detail
-    Wait Until Element Is Visible    ${ADD_TO_CART_BUTTON}
-    Click Element    ${ADD_TO_CART_BUTTON}
-    Wait Until Element Contains    ${CART_LINK}    (1)
-
-Verify Product Price
-    [Arguments]    ${expected_price}
-    ${price_text}=    Get Text    ${PRODUCT_PRICE}
-    Should Be Equal    ${price_text}    ${expected_price}
-
-Verify Product Description
-    [Arguments]    ${expected_desc}
-    ${desc_text}=    Get Text    ${PRODUCT_DESC}
-    Should Be Equal    ${desc_text}    ${expected_desc}
-
-Open Product Information
-    Click Element    ${PRODUCT_INFO_BTN}
-    Wait Until Element Is Visible    id=radix-:r4:
-
-Open Shipping Information
-    Click Element    ${SHIPPING_INFO_BTN}
-    Wait Until Element Is Visible    id=radix-:r6:
-
-View Cart
-    Click Element    ${CART_LINK}
-    Wait Until Page Contains    Shopping Cart
-
-Input Login Credentials
+# Login Keywords
+Login User
     [Arguments]    ${email}    ${password}
-    Clear Element Text    ${EMAIL_INPUT}
-    Input Text    ${EMAIL_INPUT}    ${email}
-    Clear Element Text    ${PASSWORD_INPUT}
-    Input Text    ${PASSWORD_INPUT}    ${password}
-
-Submit Login Form
-    Click Element    ${SIGNIN_BUTTON}
+    Input Text    ${LOGIN_EMAIL}    ${email}
+    Input Text    ${LOGIN_PASSWORD}    ${password}
+    Click Element    ${LOGIN_BUTTON}
 
 Verify Login Success
-    Wait Until Page Contains    Welcome back
-    Page Should Contain Element    ${ACCOUNT_HEADER}
+    Wait Until Page Contains    Signed in as:    timeout=${TIMEOUT}
 
 Verify Login Error
-    [Arguments]    ${expected_error}
-    Wait Until Page Contains    ${expected_error}
-    Page Should Contain    ${expected_error}
+    Wait Until Page Contains    ${LOGIN_ERROR}    timeout=${TIMEOUT}
+    Page Should Contain    ${LOGIN_ERROR}
 
-Switch To Register Form
-    Click Element    ${REGISTER_BUTTON}
-    Wait Until Page Contains    Become a Medusa
+# Registration Keywords
+Navigate To Register Page
+    Click Element    ${REGISTER_LINK}
+    Wait Until Page Contains    ${REGISTER_HEADER}
 
-Add Product To Cart
-    [Arguments]    ${product_name}    ${variant}=None
-    Click Element    xpath=//p[contains(text(),'${product_name}')]//ancestor::a
-    Wait Until Element Is Visible    css=button[data-testid="add-product-button"]
-    Run Keyword If    '${variant}' != 'None'    Select Product Variant    ${variant}
-    Click Element    css=button[data-testid="add-product-button"]
-    Wait Until Element Contains    ${CART_LINK}    Cart (1)
+Fill Registration Form
+    [Arguments]    ${first_name}    ${last_name}    ${email}    ${phone}    ${password}
+    Input Text    ${FIRST_NAME_INPUT}    ${first_name}
+    Input Text    ${LAST_NAME_INPUT}    ${last_name}
+    Input Text    ${EMAIL_INPUT}    ${email}
+    Run Keyword If    '${phone}' != '${EMPTY}'    Input Text    ${PHONE_INPUT}    ${phone}
+    Input Text    ${PASSWORD_INPUT}    ${password}
 
-Select Product Variant
-    [Arguments]    ${variant}
-    Wait Until Element Is Visible    css=select
-    Select From List By Label    css=select    ${variant}
+Submit Registration
+    Click Element    ${JOIN_BUTTON}
 
-Update Product Quantity
-    [Arguments]    ${product_name}    ${quantity}
-    ${row}=    Get Product Row    ${product_name}
-    Select From List By Value    ${row}//${PRODUCT_QUANTITY}    ${quantity}
-    Wait For Cart Update
+Verify Required Fields
+    [Arguments]    ${field_locator}
+    ${required}=    Get Element Attribute    ${field_locator}    required
+    Should Be Equal    ${required}    true
 
-Remove Product From Cart
-    [Arguments]    ${product_name}
-    ${row}=    Get Product Row    ${product_name}
-    Click Element    ${row}//${REMOVE_PRODUCT}
-    Wait For Cart Update
+*** Keywords ***
+Generate Random Email
+    ${random_string}=    Generate Random String    8    [LETTERS][NUMBERS]
+    ${timestamp}=    Get Current Date    result_format=%H%M%S
+    ${email}=    Set Variable    test.${random_string}.${timestamp}@example.com
+    RETURN    ${email}
 
-Get Product Row
-    [Arguments]    ${product_name}
-    ${row}=    Get WebElement    xpath=//p[contains(text(),'${product_name}')]//ancestor::tr
-    RETURN    ${row}
+Generate Random User Data
+    ${random_email}=    Generate Random Email
+    ${random_string}=    Generate Random String    4    [LETTERS]
+    ${user_data}=    Create Dictionary
+    ...    first_name=Test${random_string}
+    ...    last_name=User${random_string}
+    ...    email=${random_email}
+    ...    phone=1234567890
+    ...    password=Test123!@#
+    RETURN    ${user_data}
 
-Verify Product In Cart
-    [Arguments]    ${product_name}    ${variant}    ${price}
-    Wait Until Page Contains    ${product_name}
-    Page Should Contain    ${variant}
-    Page Should Contain    ${price}
-
-Verify Cart Total
-    [Arguments]    ${expected_total}
-    ${total}=    Get Text    ${CART_TOTAL}
-    Should Be Equal    ${total}    ${expected_total}
-
-Apply Discount Code
-    [Arguments]    ${code}
-    Click Element    ${ADD_DISCOUNT_BUTTON}
-    Input Text    css=input[placeholder="Code"]    ${code}
-    Click Element    css=button[type="submit"]
-    Wait For Cart Update
-
-Proceed To Checkout
-    Click Element    ${CHECKOUT_BUTTON}
-    Wait Until Location Contains    /checkout
+Register New User
+    ${user_data}=    Generate Random User Data
+    Fill Registration Form
+    ...    ${user_data}[first_name]
+    ...    ${user_data}[last_name]
+    ...    ${user_data}[email]
+    ...    ${user_data}[phone]
+    ...    ${user_data}[password]
+    Submit Registration
+    RETURN    ${user_data}
