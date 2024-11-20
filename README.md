@@ -7,8 +7,7 @@ Automated testing project for Medusa Store using Robot Framework, focusing on au
 ```bash
 medusa-store-testing/
 ├── .gitignore
-├── README.md              # จะสร้างให้ด้านล่าง
-├── requirements.txt       # จะสร้างให้ด้านล่าง
+├── README.md                  
 ├── resources/
 │   ├── common.robot
 │   └── medusa_keywords.robot
