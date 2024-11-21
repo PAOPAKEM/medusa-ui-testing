@@ -15,3 +15,6 @@ selenium-screenshot-*.png
 # Environment
 .env
 venv/
+
+# Powershell Scripts
+*.ps1
