@@ -11,7 +11,14 @@ Login User
     Click Element    ${LOGIN_BUTTON}
 
 Verify Login Success
-    Wait Until Page Contains    Signed in as:    timeout=${TIMEOUT}
+    # Wait for account page overview content to load
+    Wait Until Page Contains Element    css=[data-testid="overview-page-wrapper"]    timeout=${TIMEOUT}
+    
+    # Verify signed in status by checking customer email element
+    Wait Until Page Contains Element    css=[data-testid="customer-email"]    timeout=${TIMEOUT}
+    
+    # Additional verification that we're on the account page
+    Page Should Contain Element    css=[data-testid="welcome-message"]
 
 Verify Login Error
     Wait Until Page Contains    ${LOGIN_ERROR}    timeout=${TIMEOUT}
@@ -31,7 +38,9 @@ Fill Registration Form
     Input Text    ${PASSWORD_INPUT}    ${password}
 
 Submit Registration
+    Wait Until Element Is Visible    ${JOIN_BUTTON}    timeout=${TIMEOUT}
     Click Element    ${JOIN_BUTTON}
+    Wait Until Location Contains    /account    timeout=${TIMEOUT}
 
 Generate Random Email
     ${random_string}=    Generate Random String    8    [LETTERS][NUMBERS]
@@ -58,5 +67,5 @@ Register New User
     ...    ${user_data}[email]
     ...    ${user_data}[phone]
     ...    ${user_data}[password]
-    Submit Registration
+    Wait Until Element Is Visible    ${JOIN_BUTTON}    timeout=${TIMEOUT}
     RETURN    ${user_data}

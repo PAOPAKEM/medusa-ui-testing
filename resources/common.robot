@@ -15,7 +15,7 @@ Open Browser With Security Bypass
     Call Method    ${chrome_options}    add_argument    --ignore-ssl-errors
 
     # Optional: Add these if you want to run tests without opening browser window
-    Call Method    ${chrome_options}    add_argument    --headless
+    # Call Method    ${chrome_options}    add_argument    --headless
     
     Create Webdriver    Chrome    options=${chrome_options}
     Go To    ${URL}

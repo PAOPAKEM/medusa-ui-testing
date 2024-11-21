@@ -37,3 +37,6 @@ ${EMAIL_EXISTS_ERROR}      Error: A customer with the given email already has an
 ${EMAIL_PREFIX}         test.user
 ${EMAIL_DOMAIN}        example.com
 ${NAME_PREFIX}         Test
+
+${RETRY_COUNT}    3
+${RETRY_INTERVAL}    2s
