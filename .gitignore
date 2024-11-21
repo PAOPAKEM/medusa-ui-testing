@@ -15,4 +15,3 @@ selenium-screenshot-*.png
 # Environment
 .env
 venv/
-ENV/
