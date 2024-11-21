@@ -5,11 +5,9 @@ ${BROWSER}                  chrome
 ${TIMEOUT}                  20s
 
 # Navigation Elements
-${MENU_BUTTON}             css=button[data-testid="nav-menu-button"]
 ${ACCOUNT_LINK}            css=a[data-testid="nav-account-link"]
 
 # Login Page Elements
-${LOGIN_HEADER}            Sign in
 ${LOGIN_EMAIL}             css=input[data-testid="email-input"]
 ${LOGIN_PASSWORD}          css=input[data-testid="password-input"]
 ${LOGIN_BUTTON}            css=button[data-testid="sign-in-button"]
@@ -29,7 +27,3 @@ ${LOGIN_ERROR}             Error: Wrong email or password.
 
 # Test Data
 &{LOGIN_USER}              email=test@example.com    password=password123
-
-${EMAIL_PREFIX}         test.user
-${EMAIL_DOMAIN}        example.com
-${NAME_PREFIX}         Test
