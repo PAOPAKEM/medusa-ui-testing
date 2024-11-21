@@ -33,12 +33,6 @@ Fill Registration Form
 Submit Registration
     Click Element    ${JOIN_BUTTON}
 
-Verify Required Fields
-    [Arguments]    ${field_locator}
-    ${required}=    Get Element Attribute    ${field_locator}    required
-    Should Be Equal    ${required}    true
-
-*** Keywords ***
 Generate Random Email
     ${random_string}=    Generate Random String    8    [LETTERS][NUMBERS]
     ${timestamp}=    Get Current Date    result_format=%H%M%S

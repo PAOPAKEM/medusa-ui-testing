@@ -13,6 +13,9 @@ Open Browser With Security Bypass
     Call Method    ${chrome_options}    add_argument    --silent
     Call Method    ${chrome_options}    add_argument    --ignore-certificate-errors
     Call Method    ${chrome_options}    add_argument    --ignore-ssl-errors
+
+    # Optional: Add these if you want to run tests without opening browser window
+    Call Method    ${chrome_options}    add_argument    --headless
     
     Create Webdriver    Chrome    options=${chrome_options}
     Go To    ${URL}
@@ -22,3 +25,8 @@ Open Browser With Security Bypass
 Navigate To Account Page
     Click Element    ${ACCOUNT_LINK}
     Wait Until Element Is Visible    ${LOGIN_EMAIL}    timeout=${TIMEOUT}
+
+Wait Until Element Is Clickable
+    [Arguments]    ${locator}    ${timeout}
+    Wait Until Element Is Visible    ${locator}    ${timeout}
+    Wait Until Element Is Enabled    ${locator}    ${timeout}
