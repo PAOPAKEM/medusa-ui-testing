@@ -25,8 +25,3 @@ Open Browser With Security Bypass
 Navigate To Account Page
     Click Element    ${ACCOUNT_LINK}
     Wait Until Element Is Visible    ${LOGIN_EMAIL}    timeout=${TIMEOUT}
-
-Wait Until Element Is Clickable
-    [Arguments]    ${locator}    ${timeout}
-    Wait Until Element Is Visible    ${locator}    ${timeout}
-    Wait Until Element Is Enabled    ${locator}    ${timeout}
